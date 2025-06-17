@@ -1,3 +1,7 @@
+package model;
+
+import util.TaskStatus;
+
 import java.util.ArrayList;
 
 public class SubTask extends Task {
