@@ -2,10 +2,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Task {
+    private int id;
     private String name;
     private ArrayList<String> description;
     private TaskStatus status;
-    private int id;
 
 
     public Task(String name, ArrayList<String> description, TaskStatus status) {

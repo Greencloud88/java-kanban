@@ -2,15 +2,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TaskManager {
+    private int idTask = 1;
+    private final HashMap<Integer, Task> tasks = new HashMap<>();
+    private final HashMap<Integer, Epic> epics = new HashMap<>();
+    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
-HashMap<Integer, Task> tasks = new HashMap<>();
-HashMap<Integer, Epic> epics = new HashMap<>();
-HashMap<Integer, SubTask> subTasks = new HashMap<>();
-private int idTask = 1;
 
     private int generateId() {
         return idTask++;
     }
+
     public ArrayList<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
     }
@@ -130,9 +131,10 @@ private int idTask = 1;
         }
         return result;
     }
+
     private void updateEpicStatus(int epicId) {
         Epic epic = epics.get(epicId);
-        if (epic == null) return ;
+        if (epic == null) return;
         ArrayList<Integer> subIds = epic.getSubTaskIds();
         if (subIds.isEmpty()) {
             epic.setStatus(TaskStatus.NEW);
