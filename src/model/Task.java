@@ -17,6 +17,17 @@ public class Task {
         this.description = description;
     }
 
+    public Task(Task other) {
+        this.id = other.id;
+        this.name = other.name;
+        this.status = other.status;
+        if (other.description != null) {
+            this.description = new ArrayList<>(other.description);
+        } else {
+            this.description = new ArrayList<>();
+        }
+    }
+
     public String getName() {
         return name;
     }
@@ -52,7 +63,8 @@ public class Task {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        if (!(o instanceof Task)) return false; // ключевое отличие — instanceof
         Task task = (Task) o;
         return id == task.id;
     }

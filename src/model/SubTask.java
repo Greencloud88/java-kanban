@@ -12,7 +12,22 @@ public class SubTask extends Task {
         this.epicId = epicID;
     }
 
+    public SubTask(SubTask other) {
+        super(other);
+        this.epicId = other.epicId;
+    }
+
     public int getEpicId() {
+        if (epicId == this.getId()) {
+            throw new IllegalArgumentException("Подзадача не может содержать свой Эпик");
+        }
         return epicId;
+    }
+
+    public void setEpicId(int epicId) {
+        if (epicId == this.getId()) {
+            throw new IllegalArgumentException("SubTask cannot be its own Epic.");
+        }
+        this.epicId = epicId;
     }
 }
