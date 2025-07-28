@@ -1,6 +1,7 @@
 package manager;
 
-import manager.HistoryManager;
+import model.Epic;
+import model.SubTask;
 import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,35 +10,85 @@ import util.TaskStatus;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.List;
+
 class InMemoryHistoryManagerTest {
-    private HistoryManager history;
+    private HistoryManager historyManager;
+    private Task task1;
+    private Task task2;
+    private SubTask subTask;
+    private Epic epic;
 
     @BeforeEach
     void setup() {
-        history = new InMemoryHistoryManager();
+        historyManager = Manager.getDefaultHistory();
+        task1 = new Task("Task1", new ArrayList<>(), TaskStatus.NEW);
+        task1.setId(1);
+        task2 = new Task("Task2", new ArrayList<>(), TaskStatus.DONE);
+        task2.setId(2);
+
+        epic = new Epic("Epic1", new ArrayList<>());
+        epic.setStatus(TaskStatus.IN_PROGRESS);
+        epic.setId(3);
+
+        subTask = new SubTask("SubTask1", new ArrayList<>(), TaskStatus.NEW, epic.getId());
+        subTask.setId(4);
     }
 
     @Test
-    void testAddStoresCopyNotReference() {
+    void shouldAddTasksToHistory() {
+        historyManager.add(task1);
+        historyManager.add(task2);
 
-        ArrayList<String> description = new ArrayList<>();
-        description.add("Описание");
-        Task originalTask = new Task("Тестовая задача", description, TaskStatus.NEW);
-        originalTask.setId(1);
-
-        history.add(originalTask);
-
-        originalTask.setName("смена имени задачи");
-        originalTask.getDescription().add("дополнительная информация");
-        originalTask.setStatus(TaskStatus.DONE);
-
-        Task taskFromHistory = history.getHistory().get(0);
-
-        assertEquals("Тестовая задача", taskFromHistory.getName());
-        assertEquals(1, taskFromHistory.getDescription().size());
-        assertEquals("Описание", taskFromHistory.getDescription().get(0));
-        assertEquals(TaskStatus.NEW, taskFromHistory.getStatus());
+        List<Task> history = historyManager.getHistory();
+        assertEquals(2, history.size());
+        assertEquals(task1, history.get(0));
+        assertEquals(task2, history.get(1));
     }
 
+    @Test
+    void shouldMoveTaskToEndIfReadded() {
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.add(task1); // Повторное добавление
 
+        List<Task> history = historyManager.getHistory();
+        assertEquals(2, history.size());
+        assertEquals(task2, history.get(0));
+        assertEquals(task1, history.get(1));
+    }
+
+    @Test
+    void shouldHandleDifferentTaskTypes() {
+        historyManager.add(task1);
+        historyManager.add(epic);
+        historyManager.add(subTask);
+
+        List<Task> history = historyManager.getHistory();
+        assertEquals(List.of(task1, epic, subTask), history);
+    }
+
+    @Test
+    void shouldRemoveTaskFromHistoryById() {
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.remove(1);
+
+        List<Task> history = historyManager.getHistory();
+        assertEquals(1, history.size());
+        assertEquals(task2, history.get(0));
+    }
+
+    @Test
+    void shouldReturnEmptyListIfHistoryIsEmpty() {
+        assertTrue(historyManager.getHistory().isEmpty());
+    }
+
+    @Test
+    void shouldHandleRemoveNonExistentTaskGracefully() {
+        historyManager.add(task1);
+        historyManager.remove(999); // id не существует
+        assertEquals(1, historyManager.getHistory().size());
+    }
 }
+

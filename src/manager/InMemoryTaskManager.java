@@ -3,14 +3,16 @@ package manager;
 import model.Epic;
 import model.SubTask;
 import model.Task;
-import util.TaskStatus;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
+import util.TaskStatus;
+
 public class InMemoryTaskManager implements TaskManager {
+
     private int idTask = 1;
     private int nextId = 1;
     private final HashMap<Integer, Task> tasks = new HashMap<>();
