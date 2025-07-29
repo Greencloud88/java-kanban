@@ -48,4 +48,4 @@ jobs:
 
       - name: Run tests
         run: |
-          java -jar ./tests/lib/junit-platform-console-standalone-1.9.3.jar --class-path ./tests/lib/gson-2.10.1.jar:./out --scan-class-pathuses: yandex-praktikum/java-kanban/.github/workflows/api-tests.yml@ci
+          java -jar ./tests/lib/junit-platform-console-standalone-1.9.3.jar --class-path ./tests/lib/gson-2.10.1.jar:./out --scan-class-path
