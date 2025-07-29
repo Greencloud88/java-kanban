@@ -1,0 +1,29 @@
+name: Local Java Tests
+
+on:
+  pull_request:
+
+jobs:
+  build-task-manager:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Compile source and test files
+        run: |
+          mkdir -p out
+          find ./src -type f -name "*.java" > sources.txt
+          find ./Test -type f -name "*.java" > tests.txt
+          javac -d out -cp .:lib/* @sources.txt @tests.txt
+
+      - name: Run JUnit tests
+        run: |
+          java -cp .:out:lib/* org.junit.platform.console.ConsoleLauncher --scan-classpath
