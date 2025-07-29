@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import util.TaskStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -151,5 +152,17 @@ class InMemoryTaskManagerTest {
         assertEquals(subTask2Status, retrievedSubTask2.getStatus(), "Статус подзадачи 2 изменился");
         assertEquals(subTask2Id, retrievedSubTask2.getId(), "ID подзадачи 2 изменился");
         assertEquals(subTask2EpicId, retrievedSubTask2.getEpicId(), "ID эпика подзадачи 2 изменился");
+    }
+
+    @Test
+    void testTaskViewedGoesToHistory() {
+        Task task = new Task("Просмотр задачи", new ArrayList<>(), TaskStatus.NEW);
+        manager.addTask(task);
+
+        manager.getTask(task.getId()); // вызов просмотр
+
+        List<Task> history = manager.getHistory();
+        assertEquals(1, history.size());
+        assertEquals(task, history.get(0));
     }
 }

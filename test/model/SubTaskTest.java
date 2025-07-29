@@ -14,7 +14,7 @@ class SubTaskTest {
         subTask.setId(42);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            subTask.setEpicId(42); // пытаемся сделать эпиком самого себя
+            subTask.setEpicId(42);
         });
         assertEquals("SubTask cannot be its own Epic.", exception.getMessage());
     }
